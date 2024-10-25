@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-from utils import generate_vectorstore_from_url, chunk_in_topics, generate_vector_store
-from schemas.Inputvector import InputGenerate
+from utils import generate_vectorstore_from_url
 
 app = FastAPI()
 
@@ -8,12 +7,12 @@ app = FastAPI()
 async def startup():
     generate_vectorstore_from_url(["https://hotmart.com/pt-br/blog/como-funciona-hotmart"])
 
-@app.post("/generate_vectorstore")
-def chat(input:InputGenerate):
-    chunks = chunk_in_topics(input.text)
+@app.get("/generate_vectorstore")
+def generate_vectorstore():
     try:
-        generate_vector_store(chunks)
+        generate_vectorstore_from_url(["https://hotmart.com/pt-br/blog/como-funciona-hotmart"])
         return {"status": "200"}
+    
     except Exception as e:
         return {"error":e}
 

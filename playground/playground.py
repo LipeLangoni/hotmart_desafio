@@ -1,14 +1,14 @@
-import streamlit as st
-import requests
 import json
+import requests
+import streamlit as st
 
 st.markdown(
-    f"""
+    """
     <style>
-    .stApp {{
+    .stApp {
         background-image: url("https://samadhidigital.com.br/wp-content/uploads/2024/04/como-funciona-a-hotmart.png");
         background-size: cover;
-    }}
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -74,5 +74,5 @@ if st.session_state.is_processing and 'current_prompt' in st.session_state:
     st.session_state.is_processing = False
     del st.session_state.current_prompt
     st.rerun()
-st.write(f"<p style='padding-bottom: 50px;'></p>", unsafe_allow_html=True)
+st.write("<p style='padding-bottom: 50px;'></p>", unsafe_allow_html=True)
 

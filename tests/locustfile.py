@@ -1,4 +1,4 @@
-from locust import HttpUser, TaskSet, task, between
+from locust import HttpUser, task, between
 from pydantic import BaseModel
 import random
 

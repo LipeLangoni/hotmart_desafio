@@ -1,14 +1,10 @@
+from chain import RagChain
 from fastapi import FastAPI
 from fastapi import HTTPException
-from langchain_ollama.llms import OllamaLLM
-from chain import RagChain
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_chroma import Chroma
-from langchain_openai import OpenAIEmbeddings
-import os
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 import logging
-import ollama
-from langchain_openai import ChatOpenAI
+import os
 from schemas.chat import ChatInput
 
 openai_api_key = os.getenv('OPENAI_API_KEY')

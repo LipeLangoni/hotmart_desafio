@@ -1,14 +1,7 @@
-import bs4
-from langchain import hub
 from langchain_chroma import Chroma
-from langchain_community.document_loaders import WebBaseLoader
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import AsyncHtmlLoader
-from langchain_community.document_transformers import BeautifulSoupTransformer
 from langchain_community.document_transformers import Html2TextTransformer
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.schema.document import Document
 from langchain_openai import OpenAIEmbeddings
@@ -52,11 +45,29 @@ def split_documents(docs):
     return text_splitter.split_documents(docs)
 
 def get_text_chunks(text):
+    """
+    Splits the given text into chunks of a specified size with overlap.
+
+    Parameters:
+    text (str): The text to be split into chunks.
+
+    Returns:
+    List[Document]: A list of Document objects, each containing a chunk of the text.
+    """
     text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=100)
     docs = [Document(page_content=x) for x in text_splitter.split_text(text)]
     return docs
 
 def chunk_in_topics(text):
+    """
+    Splits the given text into topics based on the '##' delimiter.
+
+    Parameters:
+    text (str): The text to be split into topics.
+
+    Returns:
+    List[str]: A list of topics, each represented as a trimmed string.
+    """
     topics = text.split('##')
     topics = [topic.strip() for topic in topics if topic.strip()]
     
@@ -101,3 +112,17 @@ def generate_vectorstore_from_url(urls, save_directory="data/"):
     vector_store = generate_vector_store(get_documents(chunks), save_directory)
     return vector_store
 
+async def asemantic_search(vectorstore, input, k):
+    """
+    Performs an asynchronous semantic search on the given vector store.
+
+    Parameters:
+    vectorstore (VectorStore): The vector store to search within.
+    input (str): The input query for the search.
+    k (int): The number of nearest neighbors to retrieve.
+
+    Returns:
+    List[Document]: A list of the top k results from the search.
+    """
+    result = await vectorstore.asimilarity_search(input, k=k)
+    return result

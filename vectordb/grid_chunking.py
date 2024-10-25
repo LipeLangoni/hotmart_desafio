@@ -1,22 +1,21 @@
-import os
 import time
 import nest_asyncio
-from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, ServiceContext
+from llama_index.core import VectorStoreIndex
 from llama_index.core.evaluation import DatasetGenerator, FaithfulnessEvaluator, RelevancyEvaluator
 from llama_index.llms.openai import OpenAI
-from langchain_core.documents import Document
-from langchain_community.document_loaders import AsyncHtmlLoader
-from langchain_community.document_transformers import Html2TextTransformer
 from llama_index.readers.web import SimpleWebPageReader
 import openai
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 nest_asyncio.apply()
 
 
-openai.api_key = 'OPENAI-API-KEY'
-gpt4 = OpenAI(temperature=0, model="gpt-4o-mini")
-faithfulness_gpt4 = FaithfulnessEvaluator(llm=gpt4)
-relevancy_gpt4 = RelevancyEvaluator(llm=gpt4)
+openai.api_key = os.getenv('OPENAI_API_KEY')
+llm = OpenAI(temperature=0, model="gpt-4o-mini")
+faithfulness_gpt4 = FaithfulnessEvaluator(llm=llm)
+relevancy_gpt4 = RelevancyEvaluator(llm=llm)
 
 documents = SimpleWebPageReader(html_to_text=True).load_data(
     ["https://hotmart.com/pt-br/blog/como-funciona-hotmart"]
@@ -29,8 +28,7 @@ def evaluate_response_time_and_accuracy(chunk_size):
     total_response_time = 0
     total_faithfulness = 0
     total_relevancy = 0
-    llm = OpenAI(model="gpt-3.5-turbo")
-    vector_index = VectorStoreIndex.from_documents(eval_documents,llm=llm)
+    vector_index = VectorStoreIndex.from_documents(eval_documents,llm=llm,chunk_size=chunk_size)
     query_engine = vector_index.as_query_engine()
     num_questions = len(eval_questions)
 
