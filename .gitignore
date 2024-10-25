@@ -1,0 +1,7 @@
+hot_env
+env
+
+.env 
+
+data/
+__pycache__

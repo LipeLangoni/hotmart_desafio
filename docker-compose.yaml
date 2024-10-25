@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  service1:
+    image: api  
+    build:
+      context: ./src  
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data 
+    ports:
+      - "8000:8000" 
+    networks:
+      - bridge_network
+
+  service2:
+    image: vectorstore  
+    build:
+      context: ./vectordb  
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8080:8080" 
+    volumes:
+      - ./data:/app/data 
+    networks:
+      - bridge_network
+  service3:
+    image: playground  
+    build:
+      context: ./playground 
+      dockerfile: Dockerfile
+    volumes:
+      - ./data:/app/data 
+    networks:
+      - bridge_network
+  locust:
+    image: locust  
+    build:
+      context: ./tests  
+      dockerfile: Dockerfile
+    ports:
+      - "8089:8089" 
+    depends_on:
+      - service1  
+    networks:
+      - bridge_network
+  # ollama:
+  #   volumes:
+  #     - ollama:/root/.ollama
+  #   # Uncomment below to expose Ollama API outside the container stack
+  #   ports:
+  #     - 11435:11434 
+  #   container_name: ollama
+  #   pull_policy: always
+  #   tty: true
+  #   restart: unless-stopped
+  #   image: ollama/ollama:latest
+  #   networks:
+  #     - bridge_network
+
+volumes:
+  shared_data:
+    driver: local
+  ollama: {}
+
+networks:
+  bridge_network:
+    driver: bridge

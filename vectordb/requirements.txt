@@ -1,0 +1,11 @@
+fastapi
+llama-index==0.11.19
+langchain
+langchain_community==0.3.3
+langchain_core
+langchain_openai
+ollama==0.3.3
+uvicorn
+langchain_chroma
+html2text
+#sentence_transformers
