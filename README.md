@@ -45,7 +45,7 @@ Alternativamente, pode-se utilizar o ambiente de playground, que será introduzi
 O segundo serviço é a API responsável por gerar o banco de dados que será consumido pelo Service1. Na inicialização dessa API, um evento de startup acionará uma função que realiza o web scraping na página da Hotmart e carrega o texto em documentos, separados em chunks. A estratégia de chunking adotada foi a divisão por tópicos-chave, embora outras abordagens e estudos tenham sido realizados no processo (será abordado mais à frente). A instância do Chroma DB gerada é, então, persistida na pasta data/, que é criada caso não exista, e será compartilhada com o serviço anterior através de um volume, para garantir que a primeira API tenha acesso ao vectordb. Após a inicialização, ainda é possível realizar uma requisição na api para que ela gere novamente o vector db, se for o caso:
 
 ```bash
-curl "http://localhost:8080/generate_vectorste"
+curl "http://localhost:8080/generate_vectorstore"
 ```
 
 ## Estrategias de Chunking
